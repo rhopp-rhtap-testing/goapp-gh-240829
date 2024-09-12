@@ -106,7 +106,7 @@ spec:
           value: "$(params.NAMESPACE)"
       taskSpec:
         params:
-          - name: image
+          - name: container-image
             type: string
           - name: namespace
             type: string
@@ -141,7 +141,8 @@ spec:
                 mountPath: /credentials
             script:  |
               #!/usr/bin/env bash
-              echo "Deploying ${params.image}"
+              IMAGE="${params.container-image}"
+              echo "Deploying $IMAGE"
               cat <<EOF | oc apply -f -
               kind: Deployment
               apiVersion: apps/v1
@@ -159,7 +160,7 @@ spec:
                   spec:
                     containers:
                       - name: my-go
-                        image: ${params.image}
+                        image: $IMAGE
                         ports:
                           - name: http
                             containerPort: 8081
@@ -202,6 +203,6 @@ spec:
               oc get service -o yaml
               oc get route -o yaml
 
-          
+
               curl -k $(oc get route my-route -o jsonpath="{.spec.host}")
 
