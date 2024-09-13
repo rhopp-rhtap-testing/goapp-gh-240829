@@ -136,12 +136,14 @@ spec:
             env:
               - name: KUBECONFIG
                 value: "/credentials/$(steps.get-kubeconfig.results.kubeconfig)"
+              - name: IMAGE
+                value: $(params.container-image)
             volumeMounts:
               - name: credentials
                 mountPath: /credentials
             script:  |
               #!/usr/bin/env bash
-              IMAGE="${params.container-image}"
+              set -x
               echo "Deploying $IMAGE"
               cat <<EOF | oc apply -f -
               kind: Deployment
