@@ -207,6 +207,14 @@ spec:
               oc get service -o yaml
               oc get route -o yaml
 
+              ROUTE=$(oc get route my-route -o jsonpath="{.spec.host}")
 
-              curl -k $(oc get route my-route -o jsonpath="{.spec.host}")
+
+              timeout 30 bash -c '
+              while [[ "$(curl -k -o /dev/null -s -w "%{http_code}" $ROUTE)" != "200" ]]; do
+                  echo "Waiting for the route to be available"
+                  sleep 2
+              done
+              '
+              curl -k $ROUTE
 
