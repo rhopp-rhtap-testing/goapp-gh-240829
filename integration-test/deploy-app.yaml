@@ -207,7 +207,7 @@ spec:
               oc get service -o yaml
               oc get route -o yaml
 
-              ROUTE=$(oc get route my-route -o jsonpath="{.spec.host}")
+              export ROUTE=$(oc get route my-route -o jsonpath="{.spec.host}")
 
 
               timeout 30 bash -c '
